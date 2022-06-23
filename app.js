@@ -19,35 +19,37 @@ app.use(require("./controller/provinces"));
 //Connect to DB
 mongoose.connect(
     process.env.MONGO_DB_CONNECTION,
-    { useNewUrlParser: true },
-    (err, client) => {
-        if(err) console.log("Could not connect to Mongo: ", process.env.MONGO_DB_CONNECTION);
-        else{
-            console.log("Connected to AJMR Testing Cluster DB!");
-            client.db.listCollections().toArray(function(err, collections) {
-                console.log(collections);
-            });
-        }
-    }
+    { useNewUrlParser: true }
 )
 
-//Convert CSV to JSON then use insertMany to MongoDB using mongoose
-csvtojson().fromFile(csvFilePath)
-    .then((response) => {
-        parsedData = response;
+const parseCovidDataCSV = () => {
+    //Convert CSV to JSON then use insertMany to MongoDB using mongoose
+    console.log("Parsing CSV to JSON");
+    csvtojson().fromFile(csvFilePath)
+        .then((response) => {
+            parsedData = response;
 
-        Province.insertMany(parsedData)
-        .then((res) => {
-            console.log("Data Inserted!");
+            Province.insertMany(parsedData)
+            .then((res) => {
+                console.log("Data Inserted!");
+            })
+            .catch((err) => {
+                console.log("ERR in Mongo inserting: ", err);
+            })
         })
-        .catch((err) => {
-            console.log("ERR in Mongo inserting: ", err);
+        .catch ((err) => {
+            console.log("ERR in CSV reading: ", err);
         })
-    })
-    .catch ((err) => {
-        console.log("ERR in CSV reading: ", err);
-    })
+}
 
+Province.count((err, count) => {
+    if(!err && count == 0){
+        console.log("Collection Empty, inserting data!");
+        parseCovidDataCSV();    //Insert data to DB
+    }else if(!err && count > 0){
+        console.log("Collection Not Empty!");
+    }
+})
 
 //listening
 app.listen(PORT, () => {
