@@ -1,0 +1,27 @@
+{
+  "name": "covid19-filter",
+  "version": "1.0.0",
+  "description": "Delivers results of confirmed cases of COVID-19 in countries.",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajmrivera/covid19-filter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ajmrivera/covid19-filter/issues"
+  },
+  "homepage": "https://github.com/ajmrivera/covid19-filter#readme",
+  "dependencies": {
+    "csvtojson": "^2.0.10",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "mongoose": "^6.4.0",
+    "nodemon": "^2.0.16"
+  }
+}
